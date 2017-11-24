@@ -37,10 +37,9 @@ var options = {
 // initialize swagger-jsdoc
 var swaggerSpec = swaggerJSDoc(options);
 
-
 /******** Setting ********/
 app.use(bodyParser.urlencoded({extended: true}));
-app.set('port', 3000);
+app.set('port', 8080);
 var config = require('./config/config.js');
 app.use(bodyParser.json());
 

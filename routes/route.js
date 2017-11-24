@@ -4,13 +4,13 @@
 * @Last Modified by:   Ali
 * @Last Modified time: 2017-03-17 01:01:55
 */
-
+var md5 = require("md5")
 module.exports = (app, express, bodyParser, MongoClient, config, swaggerSpec) => {
     'use strict'
 
     // connecting to MoogoLab servive.
     var db;
-    MongoClient.connect( config.mongoLaClient, (err, database) => {
+    MongoClient.connect( "mongodb://erthr:christmas28@ds119306.mlab.com:19306/chrisy", (err, database) => {
         if (err) return console.log(err);
         db = database;
         app.listen(app.get('port'), () => {
@@ -124,7 +124,7 @@ module.exports = (app, express, bodyParser, MongoClient, config, swaggerSpec) =>
                         var santaLength = santas.length;
                         var j = santaLength - 1;
                         while ( j >= 0 ){
-                            if ( newSanta.name === santas[j].name || newSanta.spouse === santas[j].name) {
+                            if ( newSanta.name === santas[j].name && newSanta.spouse === santas[j].name) {
                                 // console.log('santa is not ok!');
                                 ok = false;
                                 break;
@@ -134,7 +134,11 @@ module.exports = (app, express, bodyParser, MongoClient, config, swaggerSpec) =>
                             }
                             j -= 1;
                         }
-                        if ( ok ) {
+                        if (req.body.passwordAgain !== req.body.password){
+                            res.status(400).send('Passwords do not match');
+                        }
+                        else if ( ok ) {
+                            newSanta.password = md5(req.body.password)
                             db.collection('santas').save(newSanta, (err, result) => {
                                 if (err) return console.log(err);
                                 if ( newSanta.spouse.length !== 0 ) {
@@ -147,7 +151,7 @@ module.exports = (app, express, bodyParser, MongoClient, config, swaggerSpec) =>
                                 }
                                 res.redirect('/');
                             });
-                        } else {
+                        } else if( !ok ) {
                             res.status(400).send('This Santa was entered before.');
                         }
             });
@@ -179,11 +183,16 @@ module.exports = (app, express, bodyParser, MongoClient, config, swaggerSpec) =>
      *         description: Successfully receieved
      */
     app.post('/myMatch', (req, res) => {
-        if (req.body.name.length !== 0 ){
+        if (req.body.hasOwnProperty('name') && req.body.password && req.body.name.length !== 0 ){
             db.collection('santas').find({ name: req.body.name.toLowerCase()}).toArray((err, results) => {
                 if (results.length !==0) {
                     // Correct name
-                    res.json(results[0]);
+                    if (md5(req.body.password) !== results[0].password){
+                        res.status(400).send('Sorry, incorrect password');
+                    }
+                    else{
+                        res.json(results[0]);
+                    }
                 } else {
                     // Wrong name
                     res.json(results);
