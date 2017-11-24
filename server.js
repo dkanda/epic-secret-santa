@@ -40,11 +40,10 @@ var swaggerSpec = swaggerJSDoc(options);
 /******** Setting ********/
 app.use(bodyParser.urlencoded({extended: true}));
 app.set('port', 8080);
-var config = require('./config/config.js');
 app.use(bodyParser.json());
 
 
 /******** Routing ********/
 app.use(express.static(__dirname + '/public'));
-require('./routes/route.js')(app, express, bodyParser, MongoClient, config, swaggerSpec);
+require('./routes/route.js')(app, express, bodyParser, MongoClient, swaggerSpec);
 

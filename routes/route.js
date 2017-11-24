@@ -5,7 +5,7 @@
 * @Last Modified time: 2017-03-17 01:01:55
 */
 var md5 = require("md5")
-module.exports = (app, express, bodyParser, MongoClient, config, swaggerSpec) => {
+module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
     'use strict'
 
     // connecting to MoogoLab servive.
