@@ -114,8 +114,8 @@ module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
             var santas = [];
             var newSanta = {};
             var ok = true;
-            newSanta.name = req.body.name.toLowerCase();
-            newSanta.spouse = req.body.spouse.toLowerCase();
+            newSanta.name = req.body.name.toLowerCase().trim();
+            newSanta.spouse = req.body.spouse.toLowerCase().trim();
             newSanta.match = '';
 
             db.collection('santas').find().toArray((err, results) => {
@@ -141,14 +141,14 @@ module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
                             newSanta.password = md5(req.body.password)
                             db.collection('santas').save(newSanta, (err, result) => {
                                 if (err) return console.log(err);
-                                if ( newSanta.spouse.length !== 0 ) {
-                                    var temp = newSanta.name;
-                                    newSanta.name = newSanta.spouse;
-                                    newSanta.spouse = temp;
-                                    db.collection('santas').save(newSanta, (err, result) => {
-                                        if (err) return console.log(err);
-                                    })
-                                }
+                                // if ( newSanta.spouse.length !== 0 ) {
+                                //     var temp = newSanta.name;
+                                //     newSanta.name = newSanta.spouse;
+                                //     newSanta.spouse = temp;
+                                //     db.collection('santas').save(newSanta, (err, result) => {
+                                //         if (err) return console.log(err);
+                                //     })
+                                // }
                                 res.redirect('/');
                             });
                         } else if( !ok ) {
@@ -184,7 +184,7 @@ module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
      */
     app.post('/myMatch', (req, res) => {
         if (req.body.hasOwnProperty('name') && req.body.password && req.body.name.length !== 0 ){
-            db.collection('santas').find({ name: req.body.name.toLowerCase()}).toArray((err, results) => {
+            db.collection('santas').find({ name: req.body.name.toLowerCase().trim()}).toArray((err, results) => {
                 if (results.length !==0) {
                     // Correct name
                     if (md5(req.body.password) !== results[0].password){
