@@ -1,3 +1,7 @@
+# Explaination
+This is a fork of santa-land's [secret santa](https://github.com/santa-land/secret-santa). I wanted to tailor things to my family.
+I added the abilty for a user to add a password so no one can snoop on their matches. 
+
 # Overview
 Secret Santa :santa: is a Western Christmas tradition in which members of a group or community :family:are randomly assigned a person to whom they anonymously :alien: give a gift :gift:. This is a MEAN stack app for secret Santa.
 
@@ -22,7 +26,8 @@ Time for this project was short. I have to add more stuff into that soon
 
 - [ ] [Jasmine](https://jasmine.github.io/): As my test framework.
 - [X] Avoid dupicated Santa.
-- [X] Register spouse while a Santa registers.
+- [X] Create a password when registering so all matches are secret.
+- [X] DO NOT Register spouse while a Santa registers, so both can set a password.
 - [ ] Mutiple family events: Waiting for round one review from interviewers.
 - [ ] Refactoring UI codes for log-in based pools: Waiting for round one review from interviewers.
 - [ ] None unique participants: Waiting for round one review from interviewers.
@@ -33,7 +38,15 @@ Time for this project was short. I have to add more stuff into that soon
 - Assumptions: You have 'Linux like terminal', `node` and `yarn` on your machine
 - Clone the repository on your computer
 - Run `yarn` in the `root directory`, and in the `app` directory of the project to get all of the dependencies.
-- You need a `config` folder inside project `root`, and inside `config` should be two files `config.js` and `development.json. I can't put the here due to sensitive data.
+- Run `yarn gulp` to build everything in the `app` folder
+- You need a `config` folder inside project `root`, and inside `config` should be one file `config.json`
+- ```
+{
+  "mongodb": "mongo db connection string",
+  "admin": "admin@whatever.com",
+  "pass": "password"
+}
+```
 - Type `npm start` or `node server.js` in the working directory shell.
 - Go to your browser and type `localhost:3000` or `http://localhost:3000/`
 
@@ -47,9 +60,8 @@ Using jsDoc3 and gulp-pages, I have provided a small documentation on the gh-pag
 - Each Santa should be able to consult the name of the person that he/she have drawn so he/she can buy an appropriate gift. 
 -	We assume that all the participants have a unique name. 
 -	To get the name drawn for a participant, a member just has to enter his own name in the application. 
--	The Application is based on an honor system.  All participants can access the results of everyone in the draw. 
 - The gift exchange admin can activate an automated draw to impress those who participate and save time.
-- Admin email is `admin@smith.com`. And admin password is `123`
+- Admin email and password are configured in the config.json file.
 - Only if admin enters right information, then the pool can be stopped to build matches. 
 - Only if admin enters right information, then the pool can be deleted. 
 

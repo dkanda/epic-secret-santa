@@ -22,6 +22,7 @@
      * @function init
      */
         function init(){
+            $scope.isSaving = undefined;
             $scope.santas = 0;
             $scope.lastSanta = "N/A";
             $scope.match = "N/A";
@@ -58,14 +59,16 @@
             $scope.santa.name = $scope.santa.name || '';
             /** @default "" */
             $scope.santa.spouse = $scope.santa.spouse || '';
+            $scope.isSaving = true;
             if ($scope.santa.name.length !==0){
-                console.log("addSanta: Good to talk to server");
                 santa.post($scope.santa).then(function(response){
                     console.log('New Santa is added');
+                    $scope.isSaving = false;
                     init();
                 }, function(error){
                     console.log('Error from server: %s', error.data);
                     $scope.duplicatedAlert = true;
+                    $scope.isSaving = false;
                 });
             }
 

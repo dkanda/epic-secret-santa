@@ -5,12 +5,17 @@
 * @Last Modified time: 2017-03-17 01:01:55
 */
 var md5 = require("md5")
-module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
+module.exports = (app, express, bodyParser, MongoClient, config, swaggerSpec) => {
     'use strict'
 
     // connecting to MoogoLab servive.
     var db;
-    MongoClient.connect( "mongodb://erthr:christmas28@ds119306.mlab.com:19306/chrisy", (err, database) => {
+    
+    if (!config.hasOwnProperty('mongodb') || !config.hasOwnProperty('admin') || !config.hasOwnProperty('pass')){
+        console.log('Incomplete config, exiting now');
+        return false
+    }
+    MongoClient.connect( config.mongodb, (err, database) => {
         if (err) return console.log(err);
         db = database;
         app.listen(app.get('port'), () => {
@@ -29,6 +34,8 @@ module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
      *         type: string
      *       match:
      *         type: string
+     *       password:
+     *         type: string     
      */
 
     /**
@@ -225,7 +232,7 @@ module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
      */
     app.post('/makeMatch', (req, res) => {
         if (req.body.email.length !== 0 && req.body.pass.length !== 0){
-            if (req.body.email === 'admin@smith.com' && req.body.pass === '123'){
+            if (req.body.email === config.admin && req.body.pass === config.pass){
                  // I am using shuffiling method.
                     var santas = [];
                     var matches = [];
@@ -300,7 +307,7 @@ module.exports = (app, express, bodyParser, MongoClient, swaggerSpec) => {
      */
     app.post('/deletefamily', (req, res)  => {
          if (req.body.email.length !== 0 && req.body.pass.length !== 0){
-            if (req.body.email === 'admin@smith.com' && req.body.pass === '123'){
+            if (req.body.email === config.admin && req.body.pass === config.pass){
                 db.collection('santas').drop((err, doc) => {
                     res.send(doc);
                 });
